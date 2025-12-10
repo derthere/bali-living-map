@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Les Village Living Map</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>
+</head>
+<body>
+
+<div id="canvas-container"></div>
+
+<div id="control-panel">
+    <h2>Living Map</h2>
+    
+    <div class="instructions">
+        Select a community narrative to explore how different people understand Les Village's space. Add your own interpretations or drag places to reposition.
+    </div>
+    
+    <div class="control-group">
+        <label>Community Narrative:</label>
+        <select id="narrative-select" onchange="loadNarrative()">
+            <option value="blank">Blank Map (Start Fresh)</option>
+            <option value="narrative1">Pak Eka - Fisherman & Marine Conservationist</option>
+            <option value="narrative2">Komang - Village & Agricultural View</option>
+            <option value="narrative3">Pertanyan - Infrastructure & Routes</option>
+            <option value="narrative4">Coastal Resident - Sea Living</option>
+        </select>
+    </div>
+    
+    <div id="narrative-info" class="narrative-info" style="display:none;">
+        <div class="narrative-name"></div>
+        <div class="narrative-desc"></div>
+    </div>
+    <div id="places-list">
+    <h3>Selected Place</h3>
+    <div id="places-container">
+        <p style="color: #999; font-size: 12px;">Click on a place to see details</p>
+    </div>
+</div>
+    
+    <h3>Base Layer (Geographic)</h3>
+    <div class="checkbox-group">
+        <div class="checkbox-item">
+            <input type="checkbox" id="show-coast" checked onchange="redrawMap()">
+            <label for="show-coast">Coastline</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="show-river1" checked onchange="redrawMap()">
+            <label for="show-river1">Western River</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="show-river2" checked onchange="redrawMap()">
+            <label for="show-river2">Eastern River</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="show-mountain" checked onchange="redrawMap()">
+            <label for="show-mountain">Mount Batur (kaja)</label>
+        </div>
+        <div class="checkbox-item">
+            <input type="checkbox" id="show-guides" checked onchange="redrawMap()">
+            <label for="show-guides">Cosmological Guides</label>
+        </div>
+    </div>
+    
+    <!-- <h3>Add Your Interpretation</h3>
+    <textarea id="narrative-input" placeholder="Add your own spatial narrative..." oninput="updatePreview()"></textarea>
+    
+    <div id="preview-info" class="preview-info" style="display:none;">
+        Preview: <span id="preview-type"></span>
+    </div> -->
+    
+    <div class="control-group">
+        <label>Place Type:</label>
+        <select id="place-type" onchange="updatePreview()">
+            <!-- <option value="auto">Auto-detect from narrative</option> -->
+            <option value="temple">Temple/Pura</option>
+            <option value="beach">Beach/Pantai</option>
+            <option value="market">Market/Pasar</option>
+            <option value="rice">Rice Field/Sawah</option>
+            <option value="village">Village Center</option>
+            <option value="water">Water/Spring</option>
+            <option value="forest">Forest</option>
+            <option value="sacred">Sacred Site</option>
+            <option value="home">Home/Dwelling</option>
+            <option value="path">Path/Road</option>
+            <option value="other">Other</option>
+        </select>
+    </div>
+    
+    <div class="control-group">
+        <label>Size: <span class="slider-value" id="size-value">50</span>px</label>
+        <input type="range" id="size-slider" min="20" max="150" value="50" oninput="updateSizeValue()">
+    </div>
+    
+    <button onclick="addPreviewToMap()">Add to Map</button>
+    <!-- <button class="secondary" onclick="clearPreview()">Clear Preview</button> -->
+    <!-- <button class="secondary" onclick="resetToOriginal()">Reset to Original</button> -->
+    <!-- <button onclick="exportData()">Export Data</button> -->
+    
+   
+</div>
+
+<!-- Load scripts in correct order -->
+<script src="narratives.js"></script>
+<script src="drawing.js"></script>
+<script src="interactions.js"></script>
+<script>
+// p5.js main sketch
+function setup() {
+    let canvas = createCanvas(windowWidth - 370, windowHeight);
+    canvas.parent('canvas-container');
+    noLoop();
+    redrawMap();
+}
+
+function draw() {
+background(180, 220, 180);    
+    drawBaseLayer();
+    
+    for (let place of places) {
+        let isSelected = (selectedPlace === place);
+        drawPlace(place, isSelected);
+    }
+    
+    if (previewPlace) {
+        drawPlace(previewPlace, false, true);
+    }
+    
+    drawConnections();
+}
+</script>
+
+</body>
+</html>

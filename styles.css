@@ -1,0 +1,222 @@
+/* styles.css - All styling for Living Map */
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+}
+
+#canvas-container {
+    flex: 1;
+}
+
+#control-panel {
+    width: 350px;
+    background: #f5f5f5;
+    padding: 20px;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    height: 100vh;
+}
+
+h2, h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    padding-top: 15px;
+    border-top: none;
+}
+
+textarea {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+button {
+    background: #4A90E2;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 10px 5px 0 0;
+    font-size: 14px;
+}
+
+button:hover {
+    background: #357ABD;
+}
+
+button.secondary {
+    background: #9E9E9E;
+}
+
+button.secondary:hover {
+    background: #757575;
+}
+
+.control-group {
+    margin: 15px 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #666;
+    font-size: 13px;
+}
+
+select, input[type="range"] {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+input[type="range"] {
+    padding: 0;
+}
+
+.slider-value {
+    display: inline-block;
+    margin-left: 10px;
+    font-weight: bold;
+    color: #4A90E2;
+}
+
+.checkbox-group {
+    background: white;
+    padding: 15px;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.checkbox-item {
+    margin: 8px 0;
+}
+
+.checkbox-item input[type="checkbox"] {
+    margin-right: 8px;
+    width: auto;
+}
+
+.checkbox-item label {
+    display: inline;
+    margin: 0;
+    cursor: pointer;
+}
+
+#places-list {
+    margin-top: 0px;
+    padding-top: 0px;
+    border-top: none;
+}
+
+.place-item {
+    background: white;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    border-left: 4px solid #4A90E2;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.place-item:hover {
+    background: #f9f9f9;
+}
+
+.place-item.selected {
+    background: #e3f2fd;
+    border-left-width: 6px;
+}
+
+.place-item.original {
+    opacity: 0.8;
+}
+
+.place-item.user-added {
+    border-left-color: #4CAF50;
+}
+
+.place-name {
+    font-weight: bold;
+    color: #333;
+}
+
+.place-narrative {
+    color: #666;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+.place-source {
+    color: #999;
+    font-size: 10px;
+    margin-top: 3px;
+    font-style: italic;
+}
+
+.delete-btn {
+    float: right;
+    color: #E24A4A;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.delete-btn:hover {
+    color: #C62828;
+}
+
+.instructions {
+    background: #fff3cd;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.preview-info {
+    background: #e3f2fd;
+    padding: 10px;
+    border-radius: 4px;
+margin: 10px 0 5px 0;
+    font-size: 12px;
+    color: #1976d2;
+}
+
+.narrative-info {
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 12px;
+    border-left: 4px solid #FF9800;
+}
+
+.narrative-name {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.narrative-desc {
+    color: #666;
+    font-size: 11px;
+    line-height: 1.3;
+}

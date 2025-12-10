@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Les Village Living Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+        #narrative-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 300px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        textarea {
+            width: 100%;
+            margin: 10px 0;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 5px 0 0;
+        }
+        button:hover {
+            background: #357ABD;
+        }
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+<div id='narrative-panel'>
+    <h3>Les Village Living Map</h3>
+    <textarea id='narrative-input' rows='4' placeholder='Enter spatial narrative...'></textarea>
+    <button onclick='processNarrative()'>Add to Map</button>
+    <button onclick='exportData()'>Export Data</button>
+</div>
+
+<script>
+    // Replace with your Mapbox token
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGVydGhlcmUiLCJhIjoiY21peG45bnFtMDZhdDNlcHBuMW5xZTJ6ZSJ9.-XLF1zmYB8AQrcr7L_751A';
+    
+    // Initialize map centered on Bali (adjust for Les Village)
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/satellite-streets-v12',
+        center: [115.0920, -8.4095], // Bali coordinates
+        zoom: 14
+    });
+
+    // Add navigation controls
+    map.addControl(new mapboxgl.NavigationControl());
+
+    // Store all features
+    let features = [];
+
+    // Pattern matching for place types
+    const patterns = {
+        temple: { type: 'temple', color: '#FFD700' },
+        pura: { type: 'temple', color: '#FFD700' },
+        beach: { type: 'beach', color: '#4A90E2' },
+        pantai: { type: 'beach', color: '#4A90E2' },
+        market: { type: 'market', color: '#E24A4A' },
+        pasar: { type: 'market', color: '#E24A4A' },
+        rice: { type: 'rice field', color: '#8BC34A' },
+        sawah: { type: 'rice field', color: '#8BC34A' }
+    };
+
+    function processNarrative() {
+        const narrative = document.getElementById('narrative-input').value;
+        
+        if (!narrative.trim()) {
+            alert('Please enter a narrative description');
+            return;
+        }
+        
+        // Extract location type
+        let placeType = 'place';
+        let color = '#FF6B6B'; // default
+        
+        for (const [keyword, info] of Object.entries(patterns)) {
+            if (narrative.toLowerCase().includes(keyword)) {
+                placeType = info.type;
+                color = info.color;
+                break;
+            }
+        }
+        
+        // Get coordinates
+        const lat = parseFloat(prompt('Latitude (e.g., -8.4095):'));
+        const lng = parseFloat(prompt('Longitude (e.g., 115.0920):'));
+        
+        if (lat && lng) {
+            addMarker(lng, lat, narrative, color, placeType);
+        } else {
+            alert('Invalid coordinates');
+        }
+    }
+
+    function addMarker(lng, lat, description, color, type) {
+        // Store feature
+        features.push({
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [lng, lat]
+            },
+            properties: {
+                description: description,
+                placeType: type,
+                color: color,
+                timestamp: new Date().toISOString()
+            }
+        });
+        
+        // Create popup
+        const popup = new mapboxgl.Popup({ offset: 25 })
+            .setHTML(`
+                <strong>${type}</strong>
+                <p>${description}</p>
+            `);
+        
+        // Create marker
+        new mapboxgl.Marker({ color: color })
+            .setLngLat([lng, lat])
+            .setPopup(popup)
+            .addTo(map);
+        
+        // Clear input
+        document.getElementById('narrative-input').value = '';
+        
+        console.log(`Added ${type} at [${lng}, ${lat}]`);
+    }
+
+    function exportData() {
+        if (features.length === 0) {
+            alert('No data to export yet. Add some narratives first!');
+            return;
+        }
+        
+        const geojson = {
+            type: 'FeatureCollection',
+            features: features
+        };
+        
+        const dataStr = JSON.stringify(geojson, null, 2);
+        const dataBlob = new Blob([dataStr], {type: 'application/json'});
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'les-village-narratives.geojson';
+        link.click();
+        
+        alert(`Exported ${features.length} features!`);
+    }
+</script>
+
+</body>
+</html>
